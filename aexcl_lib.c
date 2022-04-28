@@ -172,7 +172,7 @@ int read_line(int fd, char *line, int maxlen, int timeout, int no_poll)
 {
 	int i,rval;
 	int count=0;
-	struct pollfd pfds={events:POLLIN};
+	struct pollfd pfds={.events=POLLIN};
 	char ch;
 	*line=0;
 	pfds.fd=fd;

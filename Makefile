@@ -12,7 +12,7 @@ audio_stream.o wav_stream.o
 all: $(TARGET)
 
 raop_play: $(OBJS)
-	$(CC) $(LDFLAGS) -o $@  $^ -lcrypto -lssl -lsamplerate -lid3tag -lpthread
+	$(CC) $(LDFLAGS) -o $@ $^ -Wl,-dead_strip $(LDFLAGS) $(SSL_DIR)/lib/libssl.a $(SSL_DIR)/lib/libcrypto.a
 
 install:
 	cp raop_play /usr/local/bin
@@ -26,7 +26,7 @@ clean:
 distclean:
 
 %.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -I$(SSL_DIR)/include -c $< -o $@
 
 COMMONE_HEADERS := aexcl_lib.h raop_play.h raop_client.h rtsp_client.h
 

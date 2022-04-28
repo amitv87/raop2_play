@@ -19,7 +19,7 @@
  *****************************************************************************/
 
 #ifndef __RTSP_CLIENT_H_
-#define __RTSP_CLIENT_H
+#define __RTSP_CLIENT_H_
 
 #include <stdint.h>
 

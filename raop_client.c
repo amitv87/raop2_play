@@ -241,7 +241,7 @@ int raopcl_sync(void *args)
 	int i;
 	while(1)
 	{
-		char data[20];  //geen SSRC
+		uint8_t data[20];  //geen SSRC
                 if ( isFirst )
                 {
 		   data[0] = 144;	//RTP protocol (0x80) + extension ( 0x10 )
@@ -311,7 +311,7 @@ static int raopcl_connecttime(raopcl_data_t *raopcld, uint16_t myport)
 		raopcld->tfd=-1;
 		return -1;
 	}
-	char c = 255;
+	uint8_t c = 255;
 	int i = write(raopcld->tfd,&c,1);
 	if(i<0){
 		ERRMSG("%s: write error: %s\n", __func__, strerror(errno));
@@ -338,7 +338,7 @@ int raopcl_time_connect(void *args)
 		if(i>0)
 		{
 			// DBGMSG("%s: read %d bytes, rsize=%d\n", __func__, i,rsize);
-			char data[32];  //geen SSRC
+			uint8_t data[32];  //geen SSRC
 			data[0] = 128;	//RTP protocol
 			data[1] = 0xd3;  //payload type=83 + marker bit set = 211
 	                // data[2] = (unsigned char)((seq_number & 0xFF00) >> 8); //seq_number

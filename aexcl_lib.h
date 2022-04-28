@@ -75,7 +75,7 @@ static inline int realloc_memory(void **p, int newsize, const char *func)
 		}
 		n=n<<1;
 	}
-	newsize=newsize;
+	// newsize=newsize;
         //np=realloc(*p,newsize);
         np = (void*) malloc( newsize );
 	if(!np){

@@ -409,7 +409,7 @@ static int exec_request(rtspcl_data_t *rtspcld, char *cmd, char *content_type,
     const char delimiters[] = " ";
     char *token,*dp;
     int i,j,dsize,rval,totallength;
-    int timeout=5000; // msec unit
+    int timeout=100; // msec unit
 
     if(!rtspcld) return -1;
 
@@ -425,7 +425,7 @@ static int exec_request(rtspcl_data_t *rtspcld, char *cmd, char *content_type,
     while( hds && hds[i].key != NULL )
     {
         sprintf(reql,"%s: %s\r\n", hds[i].key, hds[i].data);
-        strncat(req,reql,sizeof(req));
+        strncat(req,reql,sizeof(req)-1);
         i++;
     }
 
@@ -441,37 +441,37 @@ static int exec_request(rtspcl_data_t *rtspcld, char *cmd, char *content_type,
             sprintf(reql, "Content-Type: %s\r\nContent-Length: %d\r\n",
             content_type, length);
         }
-        strncat(req,reql,sizeof(req));
+        strncat(req,reql,sizeof(req)-1);
     }
     
     sprintf(reql,"CSeq: %d\r\n",++rtspcld->cseq);
-    strncat(req,reql,sizeof(req));
+    strncat(req,reql,sizeof(req)-1);
     
     sprintf(reql, "User-Agent: %s\r\n", rtspcld->useragent );
-    strncat(req,reql,sizeof(req));
+    strncat(req,reql,sizeof(req)-1);
 
     i=0;
     while(rtspcld->exthds && rtspcld->exthds[i].key)
     {
         if(rtspcld->exthds[i].key[0]==0xff) {i++;continue;}
         sprintf(reql,"%s: %s\r\n", rtspcld->exthds[i].key, rtspcld->exthds[i].data);
-        strncat(req,reql,sizeof(req));
+        strncat(req,reql,sizeof(req)-1);
         i++;
     }
     
     if( rtspcld->session != NULL )
     {
         sprintf(reql,"Session: %s\r\n",rtspcld->session);
-        strncat(req,reql,sizeof(req));
+        strncat(req,reql,sizeof(req)-1);
     }
     
-    strncat(req,"\r\n",sizeof(req));
+    strncat(req,"\r\n",sizeof(req)-1);
 
     if( content_type && content)
     {
         if(!length)
         {
-            strncat(req,content,sizeof(req));
+            strncat(req,content,sizeof(req)-1);
         }
         else
         {
@@ -486,7 +486,7 @@ static int exec_request(rtspcl_data_t *rtspcld, char *cmd, char *content_type,
         DBGMSG("----> %s : write %s\n",__func__, req);
         if ( rval != strlen(req) )
         {
-           ERRMSG("couldn't write request (%d!=%d)\n",rval,strlen(req));
+           ERRMSG("couldn't write request (%d!=%ld)\n",rval,strlen(req));
         }
     }
     else
@@ -532,7 +532,7 @@ static int exec_request(rtspcl_data_t *rtspcld, char *cmd, char *content_type,
     i=0;
     while(read_line(rtspcld->fd,line,sizeof(line),timeout,0)>0){
         DBGMSG("<------ : %s\n",line);
-        timeout=1000; // once it started, it shouldn't take a long time
+        timeout=10; // once it started, it shouldn't take a long time
         if(i%16==0){
             if(realloc_memory((void*)kd,(16*(i/16+1)+1)*sizeof(key_data_t),__func__)) return -1;
             memset(*kd+16*(i/16),0,17*sizeof(key_data_t));

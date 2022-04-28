@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
 	while(!rval){
 		if(!raopld->auds){
 			// if audio data is not opened, just check events
-			rval=main_event_handler(raopld);
+			rval=main_event_handler();
 			continue;
 		}
 		switch(raopcl_get_pause(raopld->raopcl)){
